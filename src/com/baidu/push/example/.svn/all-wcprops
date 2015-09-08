@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/repository/!svn/ver/39/src/com/baidu/push/example
+END
+CustomActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repository/!svn/ver/39/src/com/baidu/push/example/CustomActivity.java
+END
+PushDemoActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/repository/!svn/ver/53/src/com/baidu/push/example/PushDemoActivity.java
+END
+PushMessageReceiver.java
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svn/repository/!svn/ver/53/src/com/baidu/push/example/PushMessageReceiver.java
+END
+LoginActivity.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/repository/!svn/ver/39/src/com/baidu/push/example/LoginActivity.java
+END
+Utils.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/repository/!svn/ver/39/src/com/baidu/push/example/Utils.java
+END

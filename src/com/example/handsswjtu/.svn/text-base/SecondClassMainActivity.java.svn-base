@@ -1,0 +1,197 @@
+package com.example.handsswjtu;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.handsSwjtu.common.DataProvider;
+import com.handsSwjtu.common.DifferentColorListViewAdapter;
+import com.handsSwjtu.httpConnect.HttpConnect;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.R.integer;
+import android.app.Activity;
+import android.app.TabActivity;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.SimpleAdapter;
+import android.widget.TabHost;
+import android.widget.Toast;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabWidget;
+
+public class SecondClassMainActivity extends Activity {
+	private ListView secondClassListView;
+	private TabHost tabHost;
+	private ListView myCourseResultListView;
+	private boolean secondClassListHaveLoad=false;
+	private boolean myCourseResultHaveLoad=false;
+	private List<Map<String, Object>> secondClassMapsList;
+	private String message;
+	private int index;
+	private int category;
+	private ProgressBar loadingProgressBar;
+	private DifferentColorListViewAdapter secondClassListAdapter;
+	private DifferentColorListViewAdapter myCourseResultAdapter;
+	private static int SECOND_CLASS_LIST_MESSAGE=2;
+	private static int MY_COURSE_RESULT_MESSAGE=1;
+	private List<Map<String, Object>> myCourseResultMapsList;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_second_class_main);
+		tabHost=(TabHost)findViewById(android.R.id.tabhost);
+		tabHost.setup();
+		TabWidget tabWidget=tabHost.getTabWidget();
+		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("课程列表").setContent(R.id.secondClassTab));
+		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("我的课程").setContent(R.id.myClassTab));
+		secondClassListView=(ListView)findViewById(R.id.secondClassList);
+		secondClassListView.setOnItemClickListener(secondClassListOnItemClickListener);
+		myCourseResultListView=(ListView)findViewById(R.id.myClassList);
+		myCourseResultListView.setOnItemClickListener(myCourseResultOnItemClickListener);
+		loadingProgressBar=(ProgressBar)findViewById(R.id.loading);
+		loadingProgressBar.setVisibility(View.INVISIBLE);
+		loadSeconClassList(1, 1);
+		secondClassMapsList=new ArrayList<Map<String,Object>>();
+		myCourseResultMapsList=new ArrayList<Map<String,Object>>();
+		tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+			
+			@Override
+			public void onTabChanged(String tabId) {
+				// TODO Auto-generated method stub
+				if (tabId.equals("tab2")&&!myCourseResultHaveLoad) {
+					//Toast.makeText(SecondClassMainActivity.this, "当前标签页为"+tabId,Toast.LENGTH_SHORT).show();
+					loadMyCourseResult(1);
+					myCourseResultHaveLoad=true;
+				}
+			}
+		}); 
+		
+	}
+
+	
+	OnItemClickListener secondClassListOnItemClickListener=new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			// TODO Auto-generated method stub
+			Intent it=new Intent(SecondClassMainActivity.this,SecondClassDetailActivity.class);
+			//it.putStringExtra("ID", secondClassMapsList.get(arg2).get("ID"));
+			it.putExtra("ID", secondClassMapsList.get(arg2).get("ID").toString());
+			startActivity(it);
+		}
+	};
+	
+	
+	OnItemClickListener myCourseResultOnItemClickListener=new OnItemClickListener() {
+	
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			// TODO Auto-generated method stub
+			Intent it=new Intent(SecondClassMainActivity.this,MyCourseDetailActivity.class);
+			//it.putStringExtra("ID", secondClassMapsList.get(arg2).get("ID"));
+			it.putExtra("ID",myCourseResultMapsList.get(arg2).get("ID").toString());
+			startActivity(it);
+		}
+	
+	};
+	
+	public void loadMyCourseResult(final int index){
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putInt("messageType", MY_COURSE_RESULT_MESSAGE);
+				msg.setData(bundle);
+				msg.what=DataProvider.MySecondClassMapsProvider(myCourseResultMapsList, message, index);
+				handler.sendMessage(msg);
+			}
+		}).start();
+	}
+	
+	
+	
+	public void loadSeconClassList(final int index,final int category) {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				//String resultString=HttpConnect.getSecondClassList(1, null);
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putInt("messageType",SECOND_CLASS_LIST_MESSAGE);
+				msg.setData(bundle);
+				msg.what=DataProvider.secondClassListMapsProvider(secondClassMapsList, message, index, category);
+				handler.sendMessage(msg);
+			}
+		}).start();;
+	}
+	
+	
+	
+	public void initSecondClassList(){
+		
+		secondClassListAdapter=new DifferentColorListViewAdapter(SecondClassMainActivity.this, secondClassMapsList, R.layout.listview_second_class_list, new String[]{"Presenter","CourseNameEx","TeachTime","showId"}, new int[]{R.id.Presenter,R.id.CourseNameEx,R.id.TeachTime,R.id.showId});
+		secondClassListView.setAdapter(secondClassListAdapter);
+	}
+	
+	public void initMySecondClassResult(){
+		myCourseResultAdapter=new DifferentColorListViewAdapter(SecondClassMainActivity.this, myCourseResultMapsList, R.layout.listview_my_second_class_result_list, new String[]{"Presenter","CourseNameEx","TeachTime","showId","CourseScore"}, new int[]{R.id.Presenter,R.id.CourseNameEx,R.id.TeachTime,R.id.showId,R.id.courseScore});
+		myCourseResultListView.setAdapter(myCourseResultAdapter);
+	}
+	
+	
+	
+	
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+
+			case 0:
+				Toast.makeText(SecondClassMainActivity.this, message, Toast.LENGTH_SHORT).show();
+				int a=msg.getData().getInt("messageType");
+				if (msg.getData().getInt("messageType")==SECOND_CLASS_LIST_MESSAGE) {
+					initSecondClassList();
+				}else{
+					initMySecondClassResult();
+				}
+				break;
+			case 1:
+				Toast.makeText(SecondClassMainActivity.this, message, Toast.LENGTH_SHORT).show();
+			case 2:
+				Toast.makeText(SecondClassMainActivity.this, "数据传输失败", Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				Toast.makeText(SecondClassMainActivity.this, "联网失败，请重试", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+			loadingProgressBar.setVisibility(View.INVISIBLE);
+		}
+	};
+
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.my_second_class, menu);
+		return true;
+	}
+
+}

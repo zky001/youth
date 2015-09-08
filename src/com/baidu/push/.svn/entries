@@ -1,0 +1,31 @@
+10
+
+dir
+39
+http://localhost:81/svn/repository/src/com/baidu/push
+http://localhost:81/svn/repository
+
+
+
+2013-11-19T05:49:28.199647Z
+39
+pan
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+7c84b075-99cf-bf46-a4d6-f7a4421a9b96
+
+example
+dir
+

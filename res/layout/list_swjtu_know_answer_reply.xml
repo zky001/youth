@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical|center" >
+
+            <TextView
+                android:id="@+id/replyFrom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="潘建胜"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/signature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="：" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/replyContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="青传网络工作室一食堂"
+                android:textSize="10sp" />
+
+            <TextView
+                android:id="@+id/replyCtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="回复时间"
+                android:textSize="8sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

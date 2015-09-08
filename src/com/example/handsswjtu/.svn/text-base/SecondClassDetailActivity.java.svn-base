@@ -1,0 +1,153 @@
+package com.example.handsswjtu;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.handsSwjtu.Objects.SecondClassDetailEntity;
+import com.handsSwjtu.common.BtnOnTouchListener;
+import com.handsSwjtu.common.DataProvider;
+import com.handsSwjtu.httpConnect.HttpConnect;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.app.Activity;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class SecondClassDetailActivity extends Activity {
+
+	private String courseId;
+	private SecondClassDetailEntity secondClassDetailEntity;
+	private ProgressBar loadingProgressBar;
+	private RelativeLayout chooseClassBtn;
+	private static int CHOOSE_COURSE_MESSAGE = 1;
+	private static int LOAD_DATA_MESSAGE = 0;
+	private String message;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_second_class_detail);
+		courseId = getIntent().getStringExtra("ID");
+		secondClassDetailEntity = new SecondClassDetailEntity();
+		loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
+		chooseClassBtn = (RelativeLayout) findViewById(R.id.chooseClassBtn);
+		chooseClassBtn.setOnTouchListener(new BtnOnTouchListener());
+		chooseClassBtn.setOnClickListener(onClickListener);
+		loadData();
+	}
+
+	OnClickListener onClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			chooseCourse(courseId);
+		}
+	};
+
+	public void chooseCourse(final String courseId) {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putInt("messageType", CHOOSE_COURSE_MESSAGE);
+				msg.setData(bundle);
+				String resultString = HttpConnect.chooseCourse(courseId);
+				if (resultString == null) {
+					msg.what = 3;
+				} else {
+					try {
+						JSONObject jsonObject = new JSONObject(resultString);
+						message = jsonObject.getString("Message");
+						if (jsonObject.getInt("State") != 0) {
+							msg.what = 1;
+						} else {
+							msg.what = 0;
+						}
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						msg.what = 2;
+					}
+				}
+				handler.sendMessage(msg);
+			}
+		}).start();
+	}
+
+	public void loadData() {
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				Message msg = new Message();
+				Bundle bundle = new Bundle();
+				bundle.putInt("messageType", LOAD_DATA_MESSAGE);
+				msg.setData(bundle);
+				msg.what = (DataProvider.secondClassDetailProvider(secondClassDetailEntity, message, courseId));
+				handler.sendMessage(msg);
+			}
+		}).start();
+	}
+
+	public void initvalues() {
+		((TextView) findViewById(R.id.CourseNameEx)).setText(secondClassDetailEntity.getCourseNameEx());
+		((TextView) findViewById(R.id.BelongQiseCode)).setText(secondClassDetailEntity.getBelongQiseCode());
+		((TextView) findViewById(R.id.TeachAddress)).setText(secondClassDetailEntity.getTeachAddress());
+		((TextView) findViewById(R.id.MaxCapacity)).setText(secondClassDetailEntity.getMaxCapacity());
+		((TextView) findViewById(R.id.TeachTime)).setText(secondClassDetailEntity.getTeachTime());
+		((TextView) findViewById(R.id.SelectedCounts)).setText(secondClassDetailEntity.getSelectedCounts());
+		((TextView) findViewById(R.id.XHours)).setText(secondClassDetailEntity.getXHours());
+		((TextView) findViewById(R.id.DepID)).setText(secondClassDetailEntity.getDepID());
+		((TextView) findViewById(R.id.Presenter)).setText(secondClassDetailEntity.getPresenter());
+		((TextView) findViewById(R.id.CourseDetail)).setText(secondClassDetailEntity.getCourseDetail());
+	}
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+
+			case 0:
+				Toast.makeText(SecondClassDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+				if (msg.getData().getInt("messageType") == LOAD_DATA_MESSAGE) {
+					initvalues();
+				}
+
+				break;
+			case 1:
+				Toast.makeText(SecondClassDetailActivity.this, message, Toast.LENGTH_SHORT).show();
+			case 2:
+				Toast.makeText(SecondClassDetailActivity.this, "数据传输失败", Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				Toast.makeText(SecondClassDetailActivity.this, "联网失败，请重试", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+			loadingProgressBar.setVisibility(View.INVISIBLE);
+		}
+	};
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.second_class_detail, menu);
+		return true;
+	}
+
+}

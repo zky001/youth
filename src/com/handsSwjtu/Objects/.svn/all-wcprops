@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/svn/repository/!svn/ver/1/src/com/handsSwjtu/Objects
+END
+SportTimeResult.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/repository/!svn/ver/35/src/com/handsSwjtu/Objects/SportTimeResult.java
+END
+SwjtuKnowAnswerReplyEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/svn/repository/!svn/ver/44/src/com/handsSwjtu/Objects/SwjtuKnowAnswerReplyEntity.java
+END
+UserInfoEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/repository/!svn/ver/51/src/com/handsSwjtu/Objects/UserInfoEntity.java
+END
+NewsListData.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/repository/!svn/ver/30/src/com/handsSwjtu/Objects/NewsListData.java
+END
+SecondClassDetailEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/svn/repository/!svn/ver/53/src/com/handsSwjtu/Objects/SecondClassDetailEntity.java
+END
+BookInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/repository/!svn/ver/1/src/com/handsSwjtu/Objects/BookInfo.java
+END
+NewsChildInfo.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/repository/!svn/ver/30/src/com/handsSwjtu/Objects/NewsChildInfo.java
+END
+NewsEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/repository/!svn/ver/28/src/com/handsSwjtu/Objects/NewsEntity.java
+END
+SwjtuKnowDetailEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/repository/!svn/ver/44/src/com/handsSwjtu/Objects/SwjtuKnowDetailEntity.java
+END
+SwjtuKnowEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/repository/!svn/ver/53/src/com/handsSwjtu/Objects/SwjtuKnowEntity.java
+END
+SwjtuChatMsgEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/repository/!svn/ver/51/src/com/handsSwjtu/Objects/SwjtuChatMsgEntity.java
+END
+SwjtuKnowAnswerEntity.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/svn/repository/!svn/ver/44/src/com/handsSwjtu/Objects/SwjtuKnowAnswerEntity.java
+END

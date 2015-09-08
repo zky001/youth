@@ -1,0 +1,253 @@
+package com.example.handsswjtu;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONObject;
+
+import com.handsSwjtu.Objects.SwjtuChatMsgEntity;
+import com.handsSwjtu.common.BtnOnTouchListener;
+import com.handsSwjtu.common.DataProvider;
+import com.handsSwjtu.common.SharePreferenceHelper;
+import com.handsSwjtu.common.Tools;
+import com.handsSwjtu.httpConnect.HttpConnect;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.util.Base64;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class SwjtuChatWithFriendActivity extends Activity {
+
+	private String stuHome;
+	private String stuName;
+	private LinearLayout chatContently;
+	private ProgressBar loadingProgressBar;
+	private RelativeLayout MsgContentSendBtn;
+	private EditText MsgContentEditText;
+	private List<NameValuePair> params;
+	private TextView chatWithWhoTextView;
+	public static boolean isForeground = false;
+	public static String stuCodeChatNow = null;
+	private ScrollView msgContentScrollView;
+	// private String stuCode;
+	// for receive customer msg from jpush server
+	private MessageReceiver mMessageReceiver;
+	public static final String MESSAGE_RECEIVED_ACTION = "com.example.handsSwjtu.MESSAGE_RECEIVED_ACTION";
+	public static final String KEY_TITLE = "title";
+	public static final String KEY_MESSAGE = "message";
+	public static final String KEY_EXTRAS = "extras";
+	private View chatSendView;
+	private SharePreferenceHelper sharePreferenceHelper;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		isForeground = true;
+		setContentView(R.layout.activity_swjtu_chat_with_friend);
+		chatContently = (LinearLayout) findViewById(R.id.chatContent);
+		loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
+		loadingProgressBar.setVisibility(View.INVISIBLE);
+		MsgContentSendBtn = (RelativeLayout) findViewById(R.id.msgContentSendBtn);
+		MsgContentSendBtn.setOnTouchListener(new BtnOnTouchListener());
+		MsgContentSendBtn.setOnClickListener(onClickListener);
+		MsgContentEditText = (EditText) findViewById(R.id.msgContentEdit);
+		chatWithWhoTextView = (TextView) findViewById(R.id.chatWithWho);
+		chatWithWhoTextView.setText(getIntent().getStringExtra("stuName"));
+		stuCodeChatNow = getIntent().getStringExtra("stuCode");
+		stuName = getIntent().getStringExtra("stuName");
+		msgContentScrollView = (ScrollView) findViewById(R.id.msgContentScrollView);
+		params = new ArrayList<NameValuePair>();
+		sharePreferenceHelper = new SharePreferenceHelper();
+		stuHome = sharePreferenceHelper.getStuCode();
+		// View chatSendView= View
+		// .inflate(SwjtuChatWithFriendActivity.this, R.layout.chat_send_layout,
+		// null);
+		// View chatReceiveView= View
+		// .inflate(SwjtuChatWithFriendActivity.this,
+		// R.layout.chat_receive_layout, null);
+		// chatContently.addView(chatSendView);
+		// chatContently.addView(chatReceiveView);
+		registerMessageReceiver();
+		initContent();
+
+	}
+
+	public void initContent() {
+		List<SwjtuChatMsgEntity> swjtuChatMsgEntities = DataProvider.swjtuChatWithFriendInitProvider(stuHome,
+				stuCodeChatNow);
+		for (int i = 0; i < swjtuChatMsgEntities.size(); i++) {
+			if (swjtuChatMsgEntities.get(i).getMsgType() == 1) {
+				addNewReceivedMessageView(swjtuChatMsgEntities.get(i).getMsgContent(), swjtuChatMsgEntities.get(i)
+						.getMsgCtime());
+			} else {
+				addNewSendMessageView(swjtuChatMsgEntities.get(i).getMsgContent(), swjtuChatMsgEntities.get(i)
+						.getMsgCtime());
+			}
+		}
+	}
+
+	public void addNewReceivedMessageView(String msgContent, String msgCtime) {
+		View chatReceiveView = View.inflate(SwjtuChatWithFriendActivity.this, R.layout.chat_receive_layout, null);
+		((TextView) chatReceiveView.findViewById(R.id.msgFrom)).setText(stuName);
+		((TextView) chatReceiveView.findViewById(R.id.msgContent)).setText(msgContent);
+		SwjtuChatMsgEntity swjtuChatMsgEntity = new SwjtuChatMsgEntity(stuCodeChatNow, stuHome, msgContent, msgCtime,
+				stuHome, 0);
+		DataProvider.swjtuChatMsgToDatabase(swjtuChatMsgEntity);
+		chatContently.addView(chatReceiveView);
+		msgContentScrollView.post(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				msgContentScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+			}
+		});
+	}
+
+	public void addNewSendMessageView(String msgContent, String msgCtime) {
+		chatSendView = View.inflate(SwjtuChatWithFriendActivity.this, R.layout.chat_send_layout, null);
+		((TextView) chatSendView.findViewById(R.id.msgContent)).setText(msgContent);
+		chatContently.addView(chatSendView);
+		SwjtuChatMsgEntity swjtuChatMsgEntity = new SwjtuChatMsgEntity(stuHome, stuCodeChatNow, msgContent, msgCtime,
+				stuHome, 1);
+		DataProvider.swjtuChatMsgToDatabase(swjtuChatMsgEntity);
+	}
+
+	OnClickListener onClickListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+
+			switch (v.getId()) {
+			case R.id.msgContentSendBtn:
+				// loadingProgressBar.setVisibility(View.VISIBLE);
+				MsgContentSend();
+				break;
+
+			default:
+				break;
+			}
+		}
+	};
+
+	public void registerMessageReceiver() {
+		mMessageReceiver = new MessageReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+		filter.addAction(MESSAGE_RECEIVED_ACTION);
+		registerReceiver(mMessageReceiver, filter);
+	}
+
+	public class MessageReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+				String msgContent = intent.getStringExtra("msgContent");
+				String msgCtime = intent.getStringExtra("msgCtime");
+				addNewReceivedMessageView(msgContent, msgCtime);
+			}
+		}
+	}
+
+	public void MsgContentSend() {
+		String msgContent = Base64.encodeToString(MsgContentEditText.getText().toString().getBytes(), Base64.DEFAULT);
+		addNewSendMessageView(MsgContentEditText.getText().toString(), Tools.getTimeNow());
+		params.add(new BasicNameValuePair("msgContent", msgContent));
+		params.add(new BasicNameValuePair("msgSendTo", stuCodeChatNow));
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				String resultString = HttpConnect.sendMsg(params);
+				if (resultString != null) {
+					try {
+						JSONObject jsonObject = new JSONObject(resultString);
+						if (jsonObject.getInt("state") == 0) {
+							handler.sendEmptyMessage(0);
+						} else {
+							handler.sendEmptyMessage(1);
+						}
+					} catch (Exception e) {
+						// TODO: handle exception
+						handler.sendEmptyMessage(2);
+					}
+				} else {
+					handler.sendEmptyMessage(3);
+				}
+			}
+		}).start();
+	}
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+
+			switch (msg.what) {
+
+			case 0:
+				Toast.makeText(SwjtuChatWithFriendActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
+				((ProgressBar) chatSendView.findViewById(R.id.sending)).setVisibility(View.INVISIBLE);
+				break;
+			case 1:
+				Toast.makeText(SwjtuChatWithFriendActivity.this, "发送失败", Toast.LENGTH_SHORT).show();
+			case 2:
+				Toast.makeText(SwjtuChatWithFriendActivity.this, "数据传输异常", Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				Toast.makeText(SwjtuChatWithFriendActivity.this, "联网失败，请重试", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+			loadingProgressBar.setVisibility(View.INVISIBLE);
+		}
+	};
+
+	@Override
+	protected void onResume() {
+		isForeground = true;
+		super.onResume();
+	}
+
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(mMessageReceiver);
+		super.onDestroy();
+	}
+
+	@Override
+	protected void onPause() {
+		isForeground = false;
+		super.onPause();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.swjtu_chat_with_friend, menu);
+		return true;
+	}
+
+}

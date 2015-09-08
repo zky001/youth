@@ -1,0 +1,125 @@
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/totalLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbg2"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    tools:context=".SearchEmptyClassrooms" >
+
+    <!-- <include layout="@layout/widget_logo_header" /> -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/swjtu_blue"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/searchBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="8dp"
+                android:background="@drawable/mybtnbg"
+                android:onClick="finishActivity" >
+
+                    <TextView
+                        android:id="@+id/showId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentTop="false"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="返回"
+                        android:textColor="#FFFF" android:textAppearance="?android:attr/textAppearanceSmall"/>
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/chatWithWho"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxEms="6"
+                    android:singleLine="true"
+                    android:text="外卖订餐"
+                    android:textColor="#FFFF"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="65dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="8dp" >
+
+                    <RelativeLayout
+                        android:id="@+id/addFriend"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/icon_bg"
+                        android:onClick="refresh" >
+
+                        <ImageView
+                            android:id="@+id/imageView1"
+                            android:layout_width="25dp"
+                            android:layout_height="40dp"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/icon_refresh" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/topbarline1" >
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/takeOutList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true" >
+
+            </ListView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>

@@ -1,0 +1,269 @@
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/totalLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbg2"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    
+    tools:context=".SearchEmptyClassrooms" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <!-- <include layout="@layout/widget_logo_header" /> -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                style="@style/topBar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/swjtu_blue"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/searchBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/mybtnbg"
+                    android:onClick="finishActivity" >
+
+                    <TextView
+                        android:id="@+id/showId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentTop="false"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="返回"
+                        android:textColor="#FFFF" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/chatWithWho"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:maxEms="6"
+                    android:singleLine="true"
+                    android:text="关于"
+                    android:textColor="#FFFF"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@drawable/topbarline1" >
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/msgLogListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="120dp"
+                    android:src="@drawable/swjtu_university" />
+
+                <LinearLayout
+                    style="@style/middleBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@drawable/topbarline2" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" >
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/swjtu_blue" >
+
+                                <TextView
+                                    android:id="@+id/TeachTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="false"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="15dp"
+                                    android:gravity="center_vertical"
+                                    android:text="关于"
+                                    android:textColor="#ffff"
+                                    android:textSize="15sp" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="15dp"
+                    android:layout_toRightOf="@+id/TeachTime"
+                    android:text="交大YOUTH手机app为您提供新闻，图书馆，第二课堂，健身卡，课程表，空闲教室，失物招领等各方面的信息.\n\n新闻：查看学校各部门新闻，并提供新闻推送\n第二课堂：接入校团委二课堂系统\n健身卡：与体育部系统对接，查询每周刷卡信息\n图书馆：馆藏图书信息查询\n课程表：一键从教务导入，并且提供上课自动静音功能\n失物招领：提供校园失物招领电子化平台\n校园网：拨号接入jdcer及swjtu-net\n校园通讯：可以用姓名和学号与登录过掌中交大的同学聊天\n外卖：提供外卖信息\n校园通讯录：收集了学校各个部门的电话号码\n\n版本：1.0.2"
+                    android:textColor="@color/black_overlay" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="15dp"
+                    android:layout_toRightOf="@+id/TeachTime"
+                    android:text="如果您在使用中遇到了任何问题，可以登录后进入校园信箱功能，与新青年网络工作室联系，我们将会在第一时间给您答复。"
+                    android:textColor="@color/blue" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="#4f6d5e"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@drawable/topbarline2" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" >
+
+                            <RelativeLayout
+                                style="@style/middleBar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/swjtu_blue" >
+
+                                <TextView
+                                    android:id="@+id/TeachTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="false"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="15dp"
+                                    android:gravity="center_vertical"
+                                    android:text="技术支持"
+                                    android:textColor="#ffff"
+                                    android:textSize="15sp" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="15dp"
+                    android:layout_toRightOf="@+id/TeachTime"
+                    android:text="共青团西南交通大学委员会新青年网络工作室（原青年传媒网络工作室）\n\n地址：西南交通大学犀浦校区一食堂五楼505\n邮箱：qcwlzx@163.com\n新浪微博：交大青年"
+                    android:textColor="@color/black_overlay" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="#4f6d5e"
+                    android:orientation="vertical" >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@drawable/topbarline2" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" >
+
+                            <RelativeLayout
+                                style="@style/middleBar"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/swjtu_blue" >
+
+                                <TextView
+                                    android:id="@+id/TeachTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_centerHorizontal="false"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="15dp"
+                                    android:gravity="center_vertical"
+                                    android:text="新青年网络工作室"
+                                    android:textColor="#ffff"
+                                    android:textSize="15sp" />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_margin="15dp"
+                    android:layout_toRightOf="@+id/TeachTime"
+                    android:text="新青年网络工作室隶属于西南交通大学团委，负责校团委网站新青年素质网(http://youth.swjtu.edu.cn)的维护与开发。\n掌中交大手机客户端Android版由工作室独立自主开发完成，下一步将进行IOS版本的开发，\n如果您具有网络编程与移动开发的兴趣或者经验，我们十分期待您的加入!"
+                    android:textColor="@color/black_overlay" />
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

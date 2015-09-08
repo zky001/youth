@@ -1,0 +1,68 @@
+package com.handsSwjtu.common;
+
+import android.R.bool;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.database.sqlite.SQLiteOpenHelper;
+
+public class DatabaseHelper extends SQLiteOpenHelper {
+
+	private final static int DATABASE_VERSION = 1;
+	private final static String DATABASE_NAME = "handsSwjtu.db";
+
+	// public SqlTools(Context context, String name, CursorFactory factory,
+	// int version) {
+	// super(context, name, factory, version);
+	// // TODO Auto-generated constructor stub
+	// }
+
+	public DatabaseHelper(Context context) {
+		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		String sql = "CREATE TABLE SCHEDULE(_id integer primary key autoincrement," + "code varchar(20),"
+				+ "name varchar(50)," + "classNum VARCHAR(50)," + "teacher VARCHAR(50)," + "campus VARCHAR(50),"
+				+ "time VARCHAR(50)," + "location VARCHAR(50)," + "classroom VARCHAR(50)," + "dayTime integer,"
+				+ "weekDay integer)";
+		db.execSQL(sql);
+		sql = "CREATE TABLE NewsList(_id integer primary key autoincrement," + "news_code varchar(20),"
+				+ "news_title varchar(100)," + "news_time varchar(20)," + "news_type integer)";
+		db.execSQL(sql);
+		sql = "CREATE TABLE swjtu_chat_messages(ID integer  PRIMARY KEY AUTOINCREMENT ,msgFrom VARCHAR( 16 ),msgTo VARCHAR(16),msgContent VARCHAR( 10240 ),stuCode VARCHAR(16),stuName VARCHAR(32),msgCtime VARCHAR(32),msgBelongTo varchar(32),msgType integer,isHaveSend integer default 1)";
+		db.execSQL(sql);
+		sql = "CREATE TABLE block_setting(ID integer  PRIMARY KEY AUTOINCREMENT ,blockWord VARCHAR( 16 ),belongTo VARCHAR( 16 ))";
+		db.execSQL(sql);
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		db.execSQL("DROP TABLE IF EXISTS schedule");
+		onCreate(db);
+	}
+
+	public int refresh(String username, String password) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		db.execSQL("delete from SCHEDULE where 1");
+		return DataProvider.scheduleProvider(db, username, password);
+	}
+
+	public void dml(String sql, Object[] args) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		db.execSQL(sql, args);
+	}
+
+	public Cursor dql(String sql, String[] args) {
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(sql, args);
+
+		return cursor;
+	}
+
+}

@@ -1,0 +1,230 @@
+package com.example.handsswjtu;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.handsSwjtu.MyView.MyMessageBox;
+import com.handsSwjtu.Objects.SwjtuKnowEntity;
+import com.handsSwjtu.common.CommonOnTouchListener;
+import com.handsSwjtu.common.DataProvider;
+import com.handsSwjtu.common.DifferentColorListViewAdapter;
+import com.handsSwjtu.common.SharePreferenceHelper;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.R.integer;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+public class MySwjtuKnowActivity extends Activity {
+
+	private ListView swjtuKnowContentListView;
+	private boolean loadingFlag = false;
+	private boolean NO_MORE_DATA = false;
+	private DifferentColorListViewAdapter swjtuKnowContentAdapter;
+	// private List<SwjtuKnowEntity> swjtuKnowEntities;
+	private List<Map<String, Object>> swjtuKnowEntitiesMapList;
+	private int pageNo = 1;
+	private ProgressBar loadingProgressBar;
+	private RelativeLayout addQuestionBtn;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_my_swjtu_know);
+		swjtuKnowContentListView = (ListView) findViewById(R.id.swjtuKnowContent);
+		loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
+		addQuestionBtn = (RelativeLayout) findViewById(R.id.addSwjtuKnowQuestion);
+		addQuestionBtn.setOnTouchListener(new CommonOnTouchListener());
+		addQuestionBtn.setOnClickListener(onClickListener);
+		loadingProgressBar.setVisibility(View.INVISIBLE);
+		swjtuKnowEntitiesMapList = new ArrayList<Map<String, Object>>();
+		// swjtuKnowEntities=new ArrayList<SwjtuKnowEntity>();
+		loadData(pageNo);
+		swjtuKnowContentAdapter = new DifferentColorListViewAdapter(MySwjtuKnowActivity.this, swjtuKnowEntitiesMapList,
+				R.layout.listview_swjtu_know_list, new String[] { "replyNum", "title", "questionFrom", "ctime",
+						"isSolved" }, new int[] { R.id.replyNum, R.id.questionTitle, R.id.questionFrom, R.id.ctime,
+						R.id.isSolved });
+		swjtuKnowContentListView.setAdapter(swjtuKnowContentAdapter);
+		swjtuKnowContentListView.setOnItemClickListener(onItemClickListener);
+		swjtuKnowContentListView.setOnScrollListener(new OnScrollListener() {
+
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE
+						& view.getLastVisiblePosition() == (view.getCount() - 1) && !loadingFlag) {
+					if (!NO_MORE_DATA) {
+						pageNo++;
+						loadingFlag = true;
+						loadingProgressBar.setVisibility(View.VISIBLE);
+						loadMoreData(pageNo);
+					} else {
+						Toast.makeText(MySwjtuKnowActivity.this, "没有更多数据了哦", Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		// swjtuKnowContentAdapter=new
+		// DifferentColorListViewAdapter(SwjtuKnowActivity.this, data, resource,
+		// from, to)
+	}
+
+	OnItemClickListener onItemClickListener = new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			// TODO Auto-generated method stub
+			Intent it = new Intent(MySwjtuKnowActivity.this, MySwjtuKnowDetailActivity.class);
+			String tmpString = swjtuKnowEntitiesMapList.get(arg2).get("id").toString();
+			it.putExtra("id", Integer.parseInt(tmpString));
+			startActivity(it);
+		}
+	};
+
+	OnClickListener onClickListener = new OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.addSwjtuKnowQuestion:
+				SharePreferenceHelper sharePreferenceHelper = new SharePreferenceHelper();
+				// if (sharePreferenceHelper.isHaveLogged()) {
+				Intent it = new Intent(MySwjtuKnowActivity.this, AddQuestionActivity.class);
+				startActivity(it);
+				// }else{
+				// MyMessageBox myMessageBox=new
+				// MyMessageBox(SwjtuKnowListActivity.this, "该操作需要登录哦！",
+				// IndividualCenterLoginActivity.class);
+				// myMessageBox.show();
+				// }
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	public void loadData(final int pageNo) {
+		loadingProgressBar.setVisibility(View.VISIBLE);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (DataProvider.swjtuKnowListMapListProvider(swjtuKnowEntitiesMapList, pageNo,
+						(new SharePreferenceHelper()).getStuCode())) {
+					if (swjtuKnowEntitiesMapList.size() != 0) {
+						handler.sendEmptyMessage(1);
+						if (swjtuKnowEntitiesMapList.size() % 10 != 0) {
+							NO_MORE_DATA = true;
+						}
+					} else {
+						handler.sendEmptyMessage(2);
+					}
+				} else {
+					handler.sendEmptyMessage(3);
+				}
+				;
+			}
+		}).start();
+	}
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				swjtuKnowContentAdapter.notifyDataSetChanged();
+				loadingProgressBar.setVisibility(View.INVISIBLE);
+				break;
+			case 2:
+				Toast.makeText(MySwjtuKnowActivity.this, "现在没有数据哦", Toast.LENGTH_SHORT).show();
+				loadingProgressBar.setVisibility(View.INVISIBLE);
+				break;
+			case 3:
+				Toast.makeText(MySwjtuKnowActivity.this, "联网失败，请重试", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+		}
+	};
+
+	public void loadMoreData(final int pageNo) {
+		loadingProgressBar.setVisibility(View.VISIBLE);
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				if (DataProvider.swjtuKnowListMapListProvider(swjtuKnowEntitiesMapList, pageNo,
+						(new SharePreferenceHelper()).getStuCode())) {
+					if (swjtuKnowEntitiesMapList.size() != 0) {
+						loadMoreHandler.sendEmptyMessage(1);
+						int a=swjtuKnowEntitiesMapList.size();
+						if (swjtuKnowEntitiesMapList.size() % 10 != 0) {
+							NO_MORE_DATA = true;
+							
+						}
+					} else {
+						loadMoreHandler.sendEmptyMessage(2);
+					}
+				} else {
+					loadMoreHandler.sendEmptyMessage(3);
+				}
+				;
+			}
+		}).start();
+	}
+
+	Handler loadMoreHandler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				swjtuKnowContentAdapter.notifyDataSetChanged();
+				loadingProgressBar.setVisibility(View.INVISIBLE);
+				break;
+			case 2:
+				Toast.makeText(MySwjtuKnowActivity.this, "现在没有数据哦", Toast.LENGTH_SHORT).show();
+				loadingProgressBar.setVisibility(View.INVISIBLE);
+				break;
+			case 3:
+				Toast.makeText(MySwjtuKnowActivity.this, "联网失败，请重试", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+			loadingFlag = false;
+		}
+	};
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.swjtu_know, menu);
+		return true;
+	}
+
+}

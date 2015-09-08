@@ -1,0 +1,130 @@
+package com.example.handsswjtu;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.handsSwjtu.common.CommonOnTouchListener;
+import com.handsSwjtu.common.DataProvider;
+import com.handsSwjtu.common.DifferentColorListViewAdapter;
+
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
+import android.widget.Toast;
+
+public class SwjtuChatListActivity extends Activity {
+
+	private RelativeLayout addFriend;
+	private ListView friendListView;
+	private String errorMsg;
+	private List<Map<String, Object>> friendListMaps;
+	private ProgressBar loadingProgressBar;
+	private SimpleAdapter adapter;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_swjtu_chat_list);
+		addFriend=(RelativeLayout)findViewById(R.id.addFriend);
+		loadingProgressBar=(ProgressBar)findViewById(R.id.loading);
+		loadingProgressBar.setVisibility(View.VISIBLE);
+		friendListView=(ListView)findViewById(R.id.friendList);
+		friendListView.setOnItemClickListener(onItemClickListener);
+		friendListMaps=new ArrayList<Map<String,Object>>();
+		errorMsg=new String();
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				handler.sendEmptyMessage(DataProvider.FriendListProvider(friendListMaps, errorMsg));
+			}
+		}).start();
+		addFriend.setOnTouchListener(new CommonOnTouchListener());
+		addFriend.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent it=new Intent(SwjtuChatListActivity.this,SearchUserActivity.class);
+				startActivity(it);
+			}
+		});	
+	}
+
+	
+	OnItemClickListener onItemClickListener=new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+			// TODO Auto-generated method stub
+			Map<String, Object> map=friendListMaps.get(arg2);
+			Intent it=new Intent(SwjtuChatListActivity.this,SwjtuChatWithFriendActivity.class);
+			it.putExtra("stuName", map.get("stuName").toString());
+			it.putExtra("stuCode", map.get("stuCode").toString());
+			startActivity(it);
+		}
+	};
+	
+	
+	
+	public void initValues() {
+		//Adapter adapter=new SimpleAdapter()
+		adapter = new SimpleAdapter(
+				SwjtuChatListActivity.this, friendListMaps,
+				R.layout.listview_swjtu_chat_friend,
+				new String[] { "stuName", "signature" },
+				new int[] { R.id.stuName, R.id.signature});
+		friendListView.setAdapter(adapter);
+	}
+	
+	
+
+	Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			
+			switch (msg.what) {
+			
+			case 0:
+				initValues();
+				Toast.makeText(SwjtuChatListActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+				break;
+			case 1:
+				Toast.makeText(SwjtuChatListActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+			case 2:
+				Toast.makeText(SwjtuChatListActivity.this, "数据传输异常", Toast.LENGTH_SHORT).show();
+				break;
+			case 3:
+				Toast.makeText(SwjtuChatListActivity.this, "联网失败，请重试", Toast.LENGTH_SHORT).show();
+				break;
+			default:
+				break;
+			}
+			loadingProgressBar.setVisibility(View.INVISIBLE);
+		}
+	};
+
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.swjtu_chat, menu);
+		return true;
+	}
+
+}

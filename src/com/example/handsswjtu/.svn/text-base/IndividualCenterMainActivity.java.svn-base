@@ -1,0 +1,69 @@
+package com.example.handsswjtu;
+
+import com.handsSwjtu.common.BtnOnTouchListener;
+import com.handsSwjtu.common.CommonOnTouchListener;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+
+public class IndividualCenterMainActivity extends Activity {
+
+	
+	private ListView msgListView; 
+	private LinearLayout lyMsgBox;
+	private LinearLayout lyMySwjtuKnow;
+	private LinearLayout lyPushSetting;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_individual_center_main);
+		lyMySwjtuKnow=(LinearLayout)findViewById(R.id.mySwjtuKnowLy);
+		lyPushSetting=(LinearLayout)findViewById(R.id.pushSettiingLy);
+		lyMySwjtuKnow.setOnTouchListener(new CommonOnTouchListener());
+		lyPushSetting.setOnTouchListener(new CommonOnTouchListener());
+		lyMySwjtuKnow.setOnClickListener(onClickListener);
+		lyPushSetting.setOnClickListener(onClickListener);
+		
+	}
+
+	OnClickListener onClickListener=new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			// TODO Auto-generated method stub
+			switch (v.getId()) {
+			case R.id.mySwjtuKnowLy:
+				Intent it=new Intent(IndividualCenterMainActivity.this,MySwjtuKnowActivity.class);
+				startActivity(it);
+				break;
+			case R.id.pushSettiingLy:
+				
+				break;
+			default:
+				break;
+			}
+
+		}
+	};
+	
+	
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.individual_center_main, menu);
+		return true;
+	}
+
+}

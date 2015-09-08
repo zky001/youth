@@ -1,0 +1,206 @@
+package com.example.handsswjtu;
+
+import java.util.ArrayList;
+
+import com.baidu.mobstat.StatService;
+import com.handsSwjtu.common.DatabaseHelper;
+
+import android.os.Bundle;
+import android.R.integer;
+import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Color;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.Window;
+import android.view.View.OnTouchListener;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
+
+public class ClassDetailActivity extends Activity {
+
+	private int weekDay;
+	private int dayTime;
+	ArrayList<EditText> editDetails;
+	EditText CodeEditText;
+	EditText nameEditText;
+	EditText classNumEditText;
+	EditText teacherEditText;
+	EditText campusEditText;
+	EditText timeEditText;
+	EditText classroomEditText;
+	CheckBox threeClassBox;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_class_detail);
+		Bundle bundle = getIntent().getExtras();
+		weekDay = bundle.getInt("weekDay");
+		dayTime = bundle.getInt("dayTime");
+		RelativeLayout saveButton = (RelativeLayout) findViewById(R.id.save);
+		RelativeLayout cancelButton = (RelativeLayout) findViewById(R.id.cancel);
+		threeClassBox = (CheckBox) findViewById(R.id.threeClass);
+		editDetails = new ArrayList<EditText>();
+		editDetails.add((EditText) findViewById(R.id.sportsplace));
+		editDetails.add((EditText) findViewById(R.id.name));
+		editDetails.add((EditText) findViewById(R.id.classNum));
+		editDetails.add((EditText) findViewById(R.id.teacher));
+		editDetails.add((EditText) findViewById(R.id.campus));
+		editDetails.add((EditText) findViewById(R.id.time));
+		editDetails.add((EditText) findViewById(R.id.classroom));
+
+		CodeEditText = (EditText) findViewById(R.id.sportsplace);
+		nameEditText = (EditText) findViewById(R.id.name);
+		classNumEditText = (EditText) findViewById(R.id.classNum);
+		teacherEditText = (EditText) findViewById(R.id.teacher);
+		campusEditText = (EditText) findViewById(R.id.campus);
+		timeEditText = (EditText) findViewById(R.id.time);
+		classroomEditText = (EditText) findViewById(R.id.classroom);
+
+		DatabaseHelper databaseHelper = new DatabaseHelper(ClassDetailActivity.this);
+		String sql = "select code,name,classNum,teacher,campus,time,classroom from schedule where weekDay='"
+				+ String.valueOf(weekDay) + "'" + "and dayTime='" + String.valueOf(dayTime) + "'";
+		Cursor cursor = databaseHelper.dql(sql, null);
+		for (int i = 0; i < editDetails.size(); i++) {
+			cursor.moveToFirst();
+			if (cursor.getString(i).equals("null")) {
+				editDetails.get(i).setText("");
+
+			} else {
+				editDetails.get(i).setText(cursor.getString(i));
+			}
+
+		}
+		String sqlTemp;
+		Cursor cursorTemp;
+		DatabaseHelper databaseHelperTemp;
+		switch (dayTime) {
+		case 2:
+			sqlTemp = "select name from schedule where weekDay='" + String.valueOf(weekDay) + "'" + "and dayTime='"
+					+ String.valueOf(4) + "'";
+			databaseHelperTemp = new DatabaseHelper(this);
+			cursorTemp = databaseHelperTemp.dql(sqlTemp, null);
+			cursorTemp.moveToFirst();
+			if (!((cursorTemp.getString(0).equals("null")) || (cursorTemp.getString(0).equals("")))) {
+				threeClassBox.setChecked(true);
+			}
+			break;
+		case 7:
+			sqlTemp = "select name from schedule where weekDay='" + String.valueOf(weekDay) + "'" + "and dayTime='"
+					+ String.valueOf(9) + "'";
+			databaseHelperTemp = new DatabaseHelper(this);
+			cursorTemp = databaseHelperTemp.dql(sqlTemp, null);
+			cursorTemp.moveToFirst();
+			if (!((cursorTemp.getString(0).equals("null")) || (cursorTemp.getString(0).equals("")))) {
+				threeClassBox.setChecked(true);
+			}
+			break;
+		default:
+
+			threeClassBox.setVisibility(View.GONE);
+			break;
+		}
+		cancelButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+
+				finish();
+			}
+		});
+
+		cancelButton.setOnTouchListener(onTouchListener);
+		saveButton.setOnTouchListener(onTouchListener);
+
+		saveButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				ArrayList<String> detailsArrayList = new ArrayList<String>();
+				for (int i = 0; i < editDetails.size(); i++) {
+					detailsArrayList.add(editDetails.get(i).getText().toString());
+				}
+				if (detailsArrayList.get(1).equals("") && detailsArrayList.get(3).equals("")
+						&& detailsArrayList.get(4).equals("")) {
+					Toast.makeText(ClassDetailActivity.this, "请至少将课程名称，授课教师，上课地点填写完整", Toast.LENGTH_LONG).show();
+
+				} else {
+					int count = threeClassBox.isChecked() ? 3 : 2;
+					for (int i = 0; i < 2; i++) {
+						String sql = "update schedule set code=?,name=?,classNum=?,teacher=?,campus=?,time=?,classroom=? where weekDay='"
+								+ weekDay + "'and dayTime='" + String.valueOf(dayTime + i) + "'";
+						DatabaseHelper databaseHelper = new DatabaseHelper(ClassDetailActivity.this);
+
+						databaseHelper.dml(sql, new String[] { editDetails.get(0).getText().toString(),
+								editDetails.get(1).getText().toString(), editDetails.get(2).getText().toString(),
+								editDetails.get(3).getText().toString(), editDetails.get(4).getText().toString(),
+								editDetails.get(5).getText().toString(), editDetails.get(6).getText().toString() });
+					}
+					String sql = "update schedule set code=?,name=?,classNum=?,teacher=?,campus=?,time=?,classroom=? where weekDay='"
+							+ weekDay + "'and dayTime='" + String.valueOf(dayTime + 2) + "'";
+					DatabaseHelper databaseHelper = new DatabaseHelper(ClassDetailActivity.this);
+					if (threeClassBox.isChecked()) {
+						databaseHelper.dml(sql, new String[] { editDetails.get(0).getText().toString(),
+								editDetails.get(1).getText().toString(), editDetails.get(2).getText().toString(),
+								editDetails.get(3).getText().toString(), editDetails.get(4).getText().toString(),
+								editDetails.get(5).getText().toString(), editDetails.get(6).getText().toString() });
+
+					} else {
+						databaseHelper.dml(sql, new String[] { "", "", "", "", "", "", "" });
+					}
+
+				}
+				Intent it = new Intent(ClassDetailActivity.this, Schedule.class);
+				Bundle bundle = new Bundle();
+				bundle.putInt("gotoPage", weekDay);
+				bundle.putBoolean("isNeedLoad", false);
+				it.putExtras(bundle);
+				startActivity(it);
+				finish();
+			}
+		});
+	}
+
+	OnTouchListener onTouchListener = new OnTouchListener() {
+
+		@Override
+		public boolean onTouch(View v, MotionEvent event) {
+			// TODO Auto-generated method stub
+			if (event.getAction() == MotionEvent.ACTION_DOWN) {
+				v.setBackgroundColor(Color.parseColor("#03b4fe"));
+			}
+			if (event.getAction() == MotionEvent.ACTION_UP) {
+				v.setBackgroundResource(R.drawable.buttonunfocused);
+				;
+			}
+			return false;
+		}
+	};
+
+	public void finishActivity(View view){
+		finish();
+	}
+
+	public void onResume() {
+		
+		super.onResume();
+		StatService.onResume(this);
+	}
+
+	public void onPause() {
+		
+		super.onPause();
+		StatService.onPause(this);
+	}
+	
+
+
+}

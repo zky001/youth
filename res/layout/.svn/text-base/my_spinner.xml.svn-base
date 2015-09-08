@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/text1"
+    android:layout_width="60dp"
+    android:layout_height="40dp"
+    android:background="#213d30"
+    android:ellipsize="marquee"
+    android:gravity="center"
+    android:singleLine="true"
+    android:text="六教"
+    android:textColor="#ffff"
+    android:textSize="15sp" >
+
+</TextView>

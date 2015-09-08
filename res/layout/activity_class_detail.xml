@@ -1,0 +1,302 @@
+<RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/totalLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainbg2"
+    android:paddingBottom="0dp"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    tools:context=".SearchEmptyClassrooms" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <!-- <include layout="@layout/widget_logo_header" /> -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/swjtu_blue"
+                android:orientation="horizontal" >
+
+                <RelativeLayout
+                    android:id="@+id/searchBtn"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_margin="8dp"
+                android:background="@drawable/mybtnbg"
+                android:onClick="finishActivity" >
+
+                    <TextView
+                        android:id="@+id/showId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentTop="false"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="返回"
+                        android:textColor="#FFFF" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/secondClassId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="课程详情"
+                    android:textColor="#FFFF"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/topbarline1" >
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="课程代码：" />
+
+                    <EditText
+                        android:id="@+id/sportsplace"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="课程名称：" />
+
+                    <EditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="教学班号：" />
+
+                    <EditText
+                        android:id="@+id/classNum"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="授课教师：" />
+
+                    <EditText
+                        android:id="@+id/teacher"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="开课学院：" />
+
+                    <EditText
+                        android:id="@+id/campus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上课时间：" />
+
+                    <EditText
+                        android:id="@+id/time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <TextView
+                        android:id="@+id/signature"
+                        style="@style/classDetailPanel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上课地点：" />
+
+                    <EditText
+                        android:id="@+id/classroom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                         
+                        android:textSize="15sp" >
+
+                    </EditText>
+                </LinearLayout>
+
+                <CheckBox
+                    android:id="@+id/threeClass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="三节连" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal" >
+
+                    <RelativeLayout
+                        android:id="@+id/save"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/buttonunfocused" >
+
+                        <TextView
+                            android:id="@+id/showId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="保存"
+                            android:textColor="#FFFF" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/cancel"
+                        android:layout_width="60dp"
+                        android:layout_height="40dp"
+
+                        android:layout_marginLeft="60dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/buttonunfocused" >
+
+                        <TextView
+                            android:id="@+id/TextView01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="false"
+                            android:layout_alignParentTop="false"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:text="取消"
+                            android:textColor="#FFFF" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </LinearLayout>
+
+</RelativeLayout>

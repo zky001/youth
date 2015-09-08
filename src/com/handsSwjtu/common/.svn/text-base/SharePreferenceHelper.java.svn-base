@@ -1,0 +1,79 @@
+package com.handsSwjtu.common;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
+public class SharePreferenceHelper {
+
+	public static final String file = "handsSwjtu";
+//	private boolean isFistStart;
+//	private boolean haveLogged;
+//	private String userId;
+//	private String channelId;
+//	private String stuCode;
+	private SharedPreferences sp;
+	private SharedPreferences.Editor editor;
+	 
+
+	public SharePreferenceHelper() {
+		sp = ContextUtil.getInstance().getSharedPreferences(file, Context.MODE_PRIVATE);
+		editor = sp.edit();
+	}
+
+	public boolean isFistStart() {
+
+		return sp.getBoolean("isFirstStart", false);
+	}
+
+	public void setFistStart(boolean isFistStart) {
+		editor.putBoolean("isFirstStart", isFistStart);
+		editor.commit();
+	}
+
+	public boolean isHaveLogged() {
+
+		return sp.getBoolean("haveLogged", false);
+	}
+
+	public void setHaveLogged(boolean haveLogged) {
+		editor.putBoolean("haveLogged", haveLogged);
+		editor.commit();
+	}
+
+	public String getUserId() {
+		return sp.getString("userId", "null");
+	}
+
+	public void setUserId(String userId) {
+		editor.putString("userId", userId);
+		editor.commit();
+	}
+
+	public String getChannelId() {
+		return sp.getString("channelId", "null");
+	}
+
+	public void setChannelId(String channelId) {
+		editor.putString("channelId", channelId);
+		editor.commit();
+	}
+
+	public String getStuCode() {
+		return sp.getString("stuCode", "null");
+	}
+
+	public void setStuCode(String stuCode) {
+		editor.putString("stuCode", stuCode);
+		editor.commit();
+	}
+	
+	public String getAppId() {
+		return sp.getString("appId", "null");
+	}
+	
+	public void setAppId(String appId) {
+		editor.putString("appId", appId);
+	}
+
+
+}
